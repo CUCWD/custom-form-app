@@ -44,4 +44,21 @@ class ExtraInfo(models.Model):
         choices=ETHNIC_GROUPS
     )
 
+    EMPLOYMENT_STATUS_CHOICES = (
+        ('efw', ugettext_noop('Employed for wages')),
+        ('selfemployed', ugettext_noop('Self-employed')),
+        ('student', ugettext_noop('Student')),
+        ('homemaker', ugettext_noop('Homemaker')),
+        ('oowlfw', ugettext_noop('Out of work and looking for work')),
+        ('oownclfw', ugettext_noop('Out of work but not currently looking for work')),
+        ('military', ugettext_noop('Military')),
+        ('retired', ugettext_noop('Retired')),
+        ('utw', ugettext_noop('Unable to work')),
+        ('other', ugettext_noop('Other')),
+    )
+    employment_status = models.CharField(
+        blank=True, null=True, max_length=20, db_index=True,
+        choices=EMPLOYMENT_STATUS_CHOICES
+    )
+
 
