@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import ugettext_noop
 
 # Backwards compatible settings.AUTH_USER_MODEL
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
@@ -28,3 +29,19 @@ class ExtraInfo(models.Model):
         blank=True, 
         max_length=5,
     )
+
+    ETHNIC_GROUPS = (
+        ('w', ugettext_noop('White')),
+        ('hl', ugettext_noop('Hispanic or Latino')),
+        ('ba', ugettext_noop('Black or African American')),
+        ('na', ugettext_noop('Native American or American Indian')),
+        ('api', ugettext_noop('Asian / Pacific Islander')),
+        ('other', ugettext_noop('Other'))
+    )
+    ethnicity = models.CharField(
+        verbose_name="Ethnicity",
+        blank=True, null=True, max_length=6, db_index=True,
+        choices=ETHNIC_GROUPS
+    )
+
+

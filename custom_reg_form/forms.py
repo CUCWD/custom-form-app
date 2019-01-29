@@ -14,4 +14,4 @@ class ExtraInfoForm(ModelForm):
 
     class Meta(object):
         model = ExtraInfo
-        fields = ('favorite_editor', 'favorite_movie')
+        fields = ('favorite_editor', 'favorite_movie', 'ethnicity')
