@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_noop
-
+from django.core.validators import RegexValidator
 # Backwards compatible settings.AUTH_USER_MODEL
 USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -59,6 +59,17 @@ class ExtraInfo(models.Model):
     employment_status = models.CharField(
         blank=True, null=True, max_length=20, db_index=True,
         choices=EMPLOYMENT_STATUS_CHOICES
+    )
+
+    zip = models.CharField(
+        verbose_name="Zip Code",
+        max_length=10,
+        null=True,
+        blank=True,
+        validators=[RegexValidator(
+            regex=r'^\d{5}(?:[-\s]\d{4})?$',
+            message=u'Must be a valid zipcode'
+        )]
     )
 
 
