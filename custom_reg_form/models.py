@@ -12,24 +12,6 @@ class ExtraInfo(models.Model):
     The form that wraps this model is in the forms.py file.
     """
     user = models.OneToOneField(USER_MODEL, null=True)
-    FAVORITE_EDITOR = (
-        ('vim', 'Vim'),
-        ('emacs', 'Emacs'),
-        ('np', 'Notepad'),
-        ('cat', 'cat > filename'),
-    )
-
-    favorite_movie = models.CharField(
-        verbose_name="Fav Flick",
-        max_length=100,
-    )
-    favorite_editor = models.CharField(
-        verbose_name="Favorite Editor",
-        choices=FAVORITE_EDITOR,
-        blank=True, 
-        max_length=5,
-    )
-
     ETHNIC_GROUPS = (
         ('w', ugettext_noop('White')),
         ('hl', ugettext_noop('Hispanic or Latino')),
@@ -57,6 +39,7 @@ class ExtraInfo(models.Model):
         ('other', ugettext_noop('Other')),
     )
     employment_status = models.CharField(
+        verbose_name="Employment Status",
         blank=True, null=True, max_length=20, db_index=True,
         choices=EMPLOYMENT_STATUS_CHOICES
     )
