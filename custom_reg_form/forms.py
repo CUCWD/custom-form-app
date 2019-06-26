@@ -16,12 +16,12 @@ class ExtraInfoForm(ModelForm):
             "required": u"Please tell us your employment status",
             "invalid": u"Enter correct employment status",
         }
-        self.fields['zip'].error_messages = {
-            "required": u"Please tell us your zip",
-            "invalid": u"Enter correct zip",
+        self.fields['zipcode'].error_messages = {
+            "required": u"Please tell us your American ZIP Code",
+            "invalid": u"Invalid American Postal Code (nnnn or nnnnn-nnnn)",
         }
 
 
     class Meta(object):
         model = ExtraInfo
-        fields = ('ethnicity','employment_status','zip')
+        fields = ('ethnicity','employment_status','zipcode')

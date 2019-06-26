@@ -25,7 +25,7 @@ class ExtraInfoTest(TestCase):
 
     def test_extra_form_handler(self):
         """Ensure that form properly accepts test data"""
-        form_data = {"ethnicity": "w", "zip": "29631","employment_status":"selfemployed"}
+        form_data = {"ethnicity": "w", "zipcode": "29631","employment_status":"selfemployed"}
         form = ExtraInfoForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -41,7 +41,7 @@ class ExtraInfoTest(TestCase):
         #response_content = json.loads(response.content)
         #self.assertEquals(response_content.get("ethnicity")
                           #[dict(user_message="Select ethnicity")])
-        #self.assertEquals(response_content.get("zip"),
+        #self.assertEquals(response_content.get("zipcode"),
                           #[dict(user_message="enter zipcode")])
         #self.assertEquals(response_content.get("employment_status"),
                           #[dict(user_message="enter employment status")])

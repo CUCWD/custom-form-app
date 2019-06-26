@@ -44,13 +44,13 @@ class ExtraInfo(models.Model):
         choices=EMPLOYMENT_STATUS_CHOICES
     )
 
-    zip = models.CharField(
+    zipcode = models.CharField(
         verbose_name="Zip Code",
         max_length=10,
         null=True,
         blank=True,
         validators=[RegexValidator(
-            regex=r'^\d{5}(?:[-\s]\d{4})?$',
+            regex=r'^(\d{5}([\-]\d{4})?)$',
             message=u'Must be a valid zipcode'
         )]
     )
