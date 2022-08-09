@@ -20,8 +20,20 @@ class ExtraInfoForm(ModelForm):
             "required": u"Please tell us your American ZIP Code",
             "invalid": u"Invalid American Postal Code (nnnn or nnnnn-nnnn)",
         }
+        self.fields['enrolled_in_school'].error_messages = {
+            "required": u"Please tell us if you are enrolled in school",
+            "invalid": u"Enter correct school enrollment status",
+        }
+        self.fields['enrolled_in_school_type'].error_messages = {
+            "required": u"Please tell us about the type of school you are enrolled in",
+            "invalid": u"Enter correct school enrollment type",
+        }
+        self.fields['local_community_living'].error_messages = {
+            "required": u"Please tell us which of the following best describes the place you live now",
+            "invalid": u"Enter correct local community type",
+        }
 
 
     class Meta(object):
         model = ExtraInfo
-        fields = ('ethnicity','employment_status','zipcode')
+        fields = ('ethnicity','employment_status','zipcode', 'enrolled_in_school', 'enrolled_in_school_type', 'local_community_living')
