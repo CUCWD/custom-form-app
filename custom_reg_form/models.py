@@ -12,6 +12,11 @@ class ExtraInfo(models.Model):
     The form that wraps this model is in the forms.py file.
     """
     user = models.OneToOneField(USER_MODEL, null=True, on_delete=models.CASCADE)
+
+    def __enumerable_to_display(self, enumerables, enum_value):
+        """ Get the human readable value from an enumerable list of key-value pairs. """
+        return dict(enumerables)[enum_value]
+
     ETHNIC_GROUPS = (
         ('w', ugettext_noop('White')),
         ('hl', ugettext_noop('Hispanic or Latino/a')),
@@ -33,6 +38,12 @@ class ExtraInfo(models.Model):
         choices=ETHNIC_GROUPS
     )
 
+    @property
+    def ethnicity_display(self):
+        """ Convenience method that returns the human readable ethnicity. """
+        if self.ethnicity:
+            return self.__enumerable_to_display(self.ETHNIC_GROUPS, self.ethnicity)
+
     EMPLOYMENT_STATUS_CHOICES = (
         ('efw', ugettext_noop('Employed for wages')),
         ('selfemployed', ugettext_noop('Self-employed')),
@@ -51,6 +62,12 @@ class ExtraInfo(models.Model):
         blank=True, null=True, max_length=20, db_index=True,
         choices=EMPLOYMENT_STATUS_CHOICES
     )
+
+    @property
+    def employment_status_display(self):
+        """ Convenience method that returns the human readable gender. """
+        if self.employment_status:
+            return self.__enumerable_to_display(self.EMPLOYMENT_STATUS_CHOICES, self.employment_status)
 
     zipcode = models.CharField(
         verbose_name="Zip Code",
@@ -77,6 +94,12 @@ class ExtraInfo(models.Model):
         choices=ENROLLED_IN_SCHOOL_CHOICES
     )
 
+    @property
+    def enrolled_in_school_display(self):
+        """ Convenience method that returns the human readable gender. """
+        if self.enrolled_in_school:
+            return self.__enumerable_to_display(self.ENROLLED_IN_SCHOOL_CHOICES, self.enrolled_in_school)
+
     ENROLLED_IN_SCHOOL_TYPE_CHOICES = (
         ('hs', ugettext_noop('High School or GED')),
         ('two-year', ugettext_noop('2-year degree')),
@@ -93,6 +116,12 @@ class ExtraInfo(models.Model):
         choices=ENROLLED_IN_SCHOOL_TYPE_CHOICES
     )
 
+    @property
+    def enrolled_in_school_type_display(self):
+        """ Convenience method that returns the human readable gender. """
+        if self.enrolled_in_school_type:
+            return self.__enumerable_to_display(self.ENROLLED_IN_SCHOOL_TYPE_CHOICES, self.enrolled_in_school_type)
+
     LOCAL_COMMUNITY_LIVING_CHOICES = (
         ('ls',ugettext_noop('A large city')),
         ('su',ugettext_noop('A suburb near a large city')),
@@ -106,5 +135,11 @@ class ExtraInfo(models.Model):
         blank=True,
         choices=LOCAL_COMMUNITY_LIVING_CHOICES
     )
+
+    @property
+    def local_community_living_display(self):
+        """ Convenience method that returns the human readable gender. """
+        if self.local_community_living:
+            return self.__enumerable_to_display(self.LOCAL_COMMUNITY_LIVING_CHOICES, self.local_community_living)
 
 
