@@ -18,7 +18,7 @@ class ExtraInfoForm(ModelForm):
         }
         self.fields['zipcode'].error_messages = {
             "required": u"Please tell us your American ZIP Code",
-            "invalid": u"Invalid American Postal Code (nnnn or nnnnn-nnnn)",
+            "invalid": u"Invalid American Postal Code (nnnnn or nnnnn-nnnn)",
         }
         self.fields['enrolled_in_school'].error_messages = {
             "required": u"Please tell us if you are enrolled in school",

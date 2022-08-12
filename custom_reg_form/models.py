@@ -17,23 +17,23 @@ class ExtraInfo(models.Model):
         """ Get the human readable value from an enumerable list of key-value pairs. """
         return dict(enumerables)[enum_value]
 
+    # [08/12/2022] removed these, but leaving comment since there'll still be
+    # `api` in the existing data in db. This option was split into two.
+    # ('api', ugettext_noop('Asian / Pacific Islander')),
     ETHNIC_GROUPS = (
         ('w', ugettext_noop('White')),
-        ('hl', ugettext_noop('Hispanic or Latino/a')),
         ('ba', ugettext_noop('Black or African American')),
         ('na', ugettext_noop('American Indian or Alaska Native')),
-        
-        # ('api', ugettext_noop('Asian / Pacific Islander')),
-
         ('as', ugettext_noop('Asian')),
         ('nhpi', ugettext_noop('Native Hawaiian or Pacific Islander')),
+        ('hl', ugettext_noop('Hispanic or Latino/a')),
         ('me', ugettext_noop('Middle Eastern')),
         ('bm', ugettext_noop('Biracial or Multiracial')),
-        ('other', ugettext_noop('Other')), # change this to text field
+        # ('other', ugettext_noop('Other')), # TODO - change this to text field
         ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
     )
     ethnicity = models.CharField(
-        verbose_name="Ethnicity",
+        verbose_name="How do you identify based on race and ethnicity?",
         blank=True, null=True, max_length=25, db_index=True,
         choices=ETHNIC_GROUPS
     )
@@ -54,7 +54,8 @@ class ExtraInfo(models.Model):
         ('military', ugettext_noop('Military')),
         ('retired', ugettext_noop('Retired')),
         ('utw', ugettext_noop('Unable to work')),
-        ('other', ugettext_noop('Other')),
+        # ('other', ugettext_noop('Other')), # TODO - change this to text field
+        ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
 
     )
     employment_status = models.CharField(
@@ -101,15 +102,15 @@ class ExtraInfo(models.Model):
             return self.__enumerable_to_display(self.ENROLLED_IN_SCHOOL_CHOICES, self.enrolled_in_school)
 
     ENROLLED_IN_SCHOOL_TYPE_CHOICES = (
-        ('hs', ugettext_noop('High School or GED')),
-        ('two-year', ugettext_noop('2-year degree')),
-        ('four-year', ugettext_noop('4-year degree')),
+        ('hs', ugettext_noop('High School')),
+        ('two-year', ugettext_noop('2-year/technical college')),
+        ('four-year', ugettext_noop('4-year college or university')),
         ('grad', ugettext_noop('Graduate School')),
-        ('o', ugettext_noop('Other')),
+        # ('o', ugettext_noop('Other')),  # change this to text field input
         ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
     )
     enrolled_in_school_type = models.CharField(
-        verbose_name="Enrolled in school type",
+        verbose_name="In which type of school are you enrolled?",
         max_length=25,
         null=True,
         blank=True,
@@ -125,11 +126,12 @@ class ExtraInfo(models.Model):
     LOCAL_COMMUNITY_LIVING_CHOICES = (
         ('ls',ugettext_noop('A large city')),
         ('su',ugettext_noop('A suburb near a large city')),
+        ('sct',ugettext_noop('A small city or town')),
         ('ra',ugettext_noop('A rural area')),
         ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
     )
     local_community_living = models.CharField(
-        verbose_name="Local Community Living",
+        verbose_name="Thinking about your local community, which of the following best describes the place you live now?",
         max_length=25,
         null=True,
         blank=True,
