@@ -1,3 +1,4 @@
+from unittest.mock import DEFAULT
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext_noop
@@ -12,6 +13,8 @@ class ExtraInfo(models.Model):
     The form that wraps this model is in the forms.py file.
     """
     user = models.OneToOneField(USER_MODEL, null=True, on_delete=models.CASCADE)
+    OPTION_PREFER_NOT_TO_SAY = ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
+
 
     def __enumerable_to_display(self, enumerables, enum_value):
         """ Get the human readable value from an enumerable list of key-value pairs. """
@@ -29,15 +32,30 @@ class ExtraInfo(models.Model):
         ('hl', ugettext_noop('Hispanic or Latino/a')),
         ('me', ugettext_noop('Middle Eastern')),
         ('bm', ugettext_noop('Biracial or Multiracial')),
-        # ('other', ugettext_noop('Other')), # TODO - change this to text field
-        ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
+        ('other', ugettext_noop('Other')), 
+        OPTION_PREFER_NOT_TO_SAY
     )
+
+    gender_free_input = models.CharField(
+    verbose_name="Please specify your Gender",
+    max_length=25,
+    null=True,
+    blank=True,
+    )
+
     ethnicity = models.CharField(
         verbose_name="How do you identify based on race and ethnicity?",
         blank=True, null=True, max_length=25, db_index=True,
         choices=ETHNIC_GROUPS
     )
 
+    ethnicity_free_input = models.CharField(
+        verbose_name="Please specify your ethnicity",
+        max_length=25,
+        null=True,
+        blank=True,
+    )
+    
     @property
     def ethnicity_display(self):
         """ Convenience method that returns the human readable ethnicity. """
@@ -84,7 +102,7 @@ class ExtraInfo(models.Model):
     ENROLLED_IN_SCHOOL_CHOICES = (
         ('no', ugettext_noop('No')),
         ('yes', ugettext_noop('Yes')),
-        ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
+        OPTION_PREFER_NOT_TO_SAY
     )
 
     enrolled_in_school = models.CharField(
@@ -106,15 +124,17 @@ class ExtraInfo(models.Model):
         ('two-year', ugettext_noop('2-year/technical college')),
         ('four-year', ugettext_noop('4-year college or university')),
         ('grad', ugettext_noop('Graduate School')),
-        # ('o', ugettext_noop('Other')),  # change this to text field input
-        ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
+        ('o', ugettext_noop('Other')),
+        OPTION_PREFER_NOT_TO_SAY
     )
+
     enrolled_in_school_type = models.CharField(
         verbose_name="In which type of school are you enrolled?",
         max_length=25,
         null=True,
         blank=True,
-        choices=ENROLLED_IN_SCHOOL_TYPE_CHOICES
+        choices=ENROLLED_IN_SCHOOL_TYPE_CHOICES,
+        default=OPTION_PREFER_NOT_TO_SAY
     )
 
     @property
@@ -128,8 +148,9 @@ class ExtraInfo(models.Model):
         ('su',ugettext_noop('A suburb near a large city')),
         ('sct',ugettext_noop('A small city or town')),
         ('ra',ugettext_noop('A rural area')),
-        ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
+        OPTION_PREFER_NOT_TO_SAY
     )
+
     local_community_living = models.CharField(
         verbose_name="Thinking about your local community, which of the following best describes the place you live now?",
         max_length=25,
@@ -143,5 +164,6 @@ class ExtraInfo(models.Model):
         """ Convenience method that returns the human readable gender. """
         if self.local_community_living:
             return self.__enumerable_to_display(self.LOCAL_COMMUNITY_LIVING_CHOICES, self.local_community_living)
+
 
 

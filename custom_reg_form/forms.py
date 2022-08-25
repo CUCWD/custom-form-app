@@ -12,6 +12,10 @@ class ExtraInfoForm(ModelForm):
             "required": u"Please tell us your ethnicity",
             "invalid": u"Enter correct ethnicity",
         }
+        self.fields['ethnicity_free_input'].error_messages = {
+            "required": u"Please specify your ethnicity",
+            "invalid": u"Enter correct ethnicity",
+        }
         self.fields['employment_status'].error_messages = {
             "required": u"Please tell us your employment status",
             "invalid": u"Enter correct employment status",
@@ -32,8 +36,12 @@ class ExtraInfoForm(ModelForm):
             "required": u"Please tell us which of the following best describes the place you live now",
             "invalid": u"Enter correct local community type",
         }
+        self.fields['gender_free_input'].error_messages = {
+            "required": u"Please specify your Gender",
+            "invalid": u"Enter correct Gender",
+        }
 
 
     class Meta(object):
         model = ExtraInfo
-        fields = ('ethnicity','employment_status','zipcode', 'enrolled_in_school', 'enrolled_in_school_type', 'local_community_living')
+        fields = ('gender_free_input','ethnicity','ethnicity_free_input','employment_status','zipcode', 'enrolled_in_school', 'enrolled_in_school_type', 'local_community_living')
