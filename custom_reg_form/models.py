@@ -29,11 +29,12 @@ class ExtraInfo(models.Model):
         ('hl', ugettext_noop('Hispanic or Latino/a')),
         ('me', ugettext_noop('Middle Eastern')),
         ('bm', ugettext_noop('Biracial or Multiracial')),
+        ('o', ugettext_noop('Other')),
         # ('other', ugettext_noop('Other')), # TODO - change this to text field
         ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
     )
     ethnicity = models.CharField(
-        verbose_name="How do you identify based on race and ethnicity?",
+        verbose_name="Race or Ethnicity",
         blank=True, null=True, max_length=25, db_index=True,
         choices=ETHNIC_GROUPS
     )
@@ -106,11 +107,12 @@ class ExtraInfo(models.Model):
         ('two-year', ugettext_noop('2-year/technical college')),
         ('four-year', ugettext_noop('4-year college or university')),
         ('grad', ugettext_noop('Graduate School')),
+        ('ne', ugettext_noop('Not Enrolled')),
         # ('o', ugettext_noop('Other')),  # change this to text field input
         ('prefer-not-to-say', ugettext_noop('Prefer not to say'))
     )
     enrolled_in_school_type = models.CharField(
-        verbose_name="In which type of school are you enrolled?",
+        verbose_name="Type of Current School Enrollment",
         max_length=25,
         null=True,
         blank=True,
