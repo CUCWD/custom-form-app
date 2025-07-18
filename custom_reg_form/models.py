@@ -108,6 +108,7 @@ class ExtraInfo(models.Model):
         ('four-year', gettext_noop('4-year college or university')),
         ('grad', gettext_noop('Graduate School')),
         ('ne', gettext_noop('Not Enrolled')),
+        ('instructor', gettext_noop('Instructor')),
         # ('o', gettext_noop('Other')),  # change this to text field input
         ('prefer-not-to-say', gettext_noop('Prefer not to say'))
     )
