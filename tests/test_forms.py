@@ -1,11 +1,11 @@
 import json
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 from django.test.client import Client
 from django.utils import timezone
 
-from .forms import ExtraInfoForm
+from custom_reg_form.forms import ExtraInfoForm
 
 
 class ExtraInfoTest(TestCase):
