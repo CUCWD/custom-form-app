@@ -1,11 +1,13 @@
-from django.test import TestCase
-from django.test.client import Client
-from django.core.urlresolvers import reverse
-from django.utils import timezone
-from .forms import ExtraInfoForm
 import json
 
-# Create your tests here.
+from django.core.urlresolvers import reverse
+from django.test import TestCase
+from django.test.client import Client
+from django.utils import timezone
+
+from .forms import ExtraInfoForm
+
+
 class ExtraInfoTest(TestCase):
     """
     Test reg form ----> Test cases need to be rewritten
