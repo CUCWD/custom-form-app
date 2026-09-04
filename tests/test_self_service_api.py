@@ -66,3 +66,63 @@ class SelfServiceApiTests(TestCase):
         payload = json.loads(response.content)
         self.assertIn('zipcode', payload)
         self.assertIn('Must be a valid zipcode', payload['zipcode'])
+
+
+class UsernameApiAuthorizationTests(TestCase):
+    """Tests for username-based custom account field authorization."""
+
+    def setUp(self):
+        user_model = get_user_model()
+        self.user = user_model.objects.create_user(username='alice', password='secret')
+        self.other_user = user_model.objects.create_user(username='bob', password='secret')
+        self.staff_user = user_model.objects.create_user(
+            username='staff', password='secret', is_staff=True,
+        )
+
+    def url_for(self, username):
+        return f'/api/custom-reg-form/v1/accounts/{username}/'
+
+    def test_username_route_requires_authentication(self):
+        response = self.client.get(self.url_for(self.user.username))
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_self_access_reads_and_updates(self):
+        self.client.force_login(self.user)
+
+        get_response = self.client.get(self.url_for(self.user.username))
+        patch_response = self.client.patch(
+            self.url_for(self.user.username),
+            data=json.dumps({'zipcode': '12345'}),
+            content_type='application/json',
+        )
+
+        self.assertEqual(get_response.status_code, 200)
+        self.assertEqual(patch_response.status_code, 200)
+        self.assertEqual(json.loads(patch_response.content)['zipcode'], '12345')
+
+    def test_staff_can_read_another_user(self):
+        self.client.force_login(self.staff_user)
+
+        response = self.client.get(self.url_for(self.user.username))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_non_staff_cannot_read_another_user(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.url_for(self.other_user.username))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_cross_user_updates_are_rejected(self):
+        self.client.force_login(self.staff_user)
+
+        response = self.client.patch(
+            self.url_for(self.user.username),
+            data=json.dumps({'zipcode': '12345'}),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(ExtraInfo.objects.filter(user=self.user).exists())
