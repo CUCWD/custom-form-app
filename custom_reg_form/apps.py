@@ -11,3 +11,12 @@ class CustomRegFormConfig(AppConfig):
     """
 
     name = 'custom_reg_form'
+    plugin_app = {
+        'url_config': {
+            'lms.djangoapp': {
+                'namespace': 'custom_reg_form',
+                'regex': r'^api/custom-reg-form/v1/',
+                'relative_path': 'urls',
+            },
+        },
+    }

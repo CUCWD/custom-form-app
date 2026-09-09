@@ -39,7 +39,7 @@ LOCALE_PATHS = [
     root('custom_reg_form', 'conf', 'locale'),
 ]
 
-ROOT_URLCONF = 'custom_reg_form.urls'
+ROOT_URLCONF = 'test_urls'
 
 SECRET_KEY = 'insecure-secret-key'
 
