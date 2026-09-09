@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from custom_reg_form.models import ExtraInfo
 
@@ -66,6 +66,34 @@ class SelfServiceApiTests(TestCase):
         payload = json.loads(response.content)
         self.assertIn('zipcode', payload)
         self.assertIn('Must be a valid zipcode', payload['zipcode'])
+
+    @override_settings(REGISTRATION_EXTRA_FIELDS={
+        'ethnicity': 'required',
+        'employment_status': 'optional',
+        'enrolled_in_school': 'hidden',
+        'country': 'required',
+    })
+    def test_metadata_exposes_custom_field_visibility(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get('/api/custom-reg-form/v1/me/')
+
+        self.assertEqual(response.status_code, 200)
+        visibility = json.loads(response.content)['metadata']['visibility']
+        self.assertEqual(visibility['ethnicity'], 'required')
+        self.assertEqual(visibility['employment_status'], 'optional')
+        self.assertEqual(visibility['enrolled_in_school'], 'hidden')
+        self.assertEqual(set(visibility), set(self.FIELD_NAMES))
+        self.assertNotIn('country', visibility)
+
+    @override_settings(REGISTRATION_EXTRA_FIELDS={})
+    def test_missing_visibility_configuration_defaults_to_optional(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get('/api/custom-reg-form/v1/me/')
+
+        visibility = json.loads(response.content)['metadata']['visibility']
+        self.assertEqual(set(visibility.values()), {'optional'})
 
 
 class UsernameApiAuthorizationTests(TestCase):

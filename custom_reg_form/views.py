@@ -3,6 +3,7 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 
@@ -18,6 +19,22 @@ CUSTOM_FIELDS = (
     'local_community_living',
     'zipcode',
 )
+FIELD_VISIBILITY_STATES = ('required', 'optional', 'hidden')
+DEFAULT_FIELD_VISIBILITY = 'optional'
+
+
+def _field_visibility():
+    """Return visibility metadata for custom fields, defaulting to optional."""
+    configured_fields = getattr(settings, 'REGISTRATION_EXTRA_FIELDS', {})
+    if not isinstance(configured_fields, dict):
+        configured_fields = {}
+
+    return {
+        field_name: configured_fields.get(field_name)
+        if configured_fields.get(field_name) in FIELD_VISIBILITY_STATES
+        else DEFAULT_FIELD_VISIBILITY
+        for field_name in CUSTOM_FIELDS
+    }
 
 
 def _serialize_extra_info(extra_info):
@@ -25,6 +42,7 @@ def _serialize_extra_info(extra_info):
     payload = {}
     for field_name in CUSTOM_FIELDS:
         payload[field_name] = getattr(extra_info, field_name, None)
+    payload['metadata'] = {'visibility': _field_visibility()}
     return payload
 
 
