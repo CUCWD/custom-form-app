@@ -1,172 +1,20 @@
 custom-form-app
 ###############
 
+.. note::
+
+  This README was auto-generated. Maintainer: please review its contents and
+  update all relevant sections. Instructions to you are marked with
+  "PLACEHOLDER" or "TODO". Update or remove those sections, and remove this
+  note when you are done.
+
 |pypi-badge| |ci-badge| |codecov-badge| |doc-badge| |pyversions-badge|
 |license-badge| |status-badge|
 
 Purpose
 *******
 
-``custom-form-app`` stores and serves custom registration fields for Open edX
-accounts. It adds its API through the LMS plugin URL mechanism and does not
-modify the core Open edX account API.
-
-Custom Account Fields API
-**************************
-
-The API is mounted under ``/api/custom-reg-form/v1/``. Requests must be made
-by an authenticated user. JSON requests should use the
-``Content-Type: application/json`` header.
-
-Endpoints
-=========
-
-.. list-table::
-     :header-rows: 1
-     :widths: 35 65
-
-     * - Method and path
-         - Access
-     * - ``GET /api/custom-reg-form/v1/me/``
-         - Read the authenticated user's fields.
-     * - ``PATCH /api/custom-reg-form/v1/me/``
-         - Partially update the authenticated user's fields.
-     * - ``GET /api/custom-reg-form/v1/accounts/{username}/``
-         - Read the user's fields. A user may read their own fields; staff may
-             read another user's fields.
-     * - ``PATCH /api/custom-reg-form/v1/accounts/{username}/``
-         - Partially update the user's fields. Updates are allowed only when the
-             authenticated user is the target user; cross-user updates are denied,
-             including for staff.
-
-Supported fields
-================
-
-The API supports these six fields. Values for choice fields must use the
-listed API value, not the display label.
-
-.. list-table::
-     :header-rows: 1
-     :widths: 35 65
-
-     * - Field
-         - Accepted values
-     * - ``ethnicity``
-         - ``w``, ``ba``, ``na``, ``as``, ``nhpi``, ``hl``, ``me``, ``bm``,
-             ``o``, or ``prefer-not-to-say``
-     * - ``employment_status``
-         - ``efw``, ``selfemployed``, ``student``, ``homemaker``, ``oowlfw``,
-             ``oownclfw``, ``military``, ``retired``, ``utw``, or
-             ``prefer-not-to-say``
-     * - ``enrolled_in_school``
-         - ``no``, ``yes``, or ``prefer-not-to-say``
-     * - ``enrolled_in_school_type``
-         - ``hs``, ``two-year``, ``four-year``, ``grad``, ``ne``, ``instructor``,
-             or ``prefer-not-to-say``
-     * - ``local_community_living``
-         - ``ls``, ``su``, ``sct``, ``ra``, or ``prefer-not-to-say``
-     * - ``zipcode``
-         - A five-digit ZIP Code or ZIP+4 value, for example ``12345`` or
-             ``12345-6789``
-
-GET example
-===========
-
-.. code-block:: console
-
-     $ curl -b cookies.txt \
-             https://lms.example.com/api/custom-reg-form/v1/me/
-
-The response contains all six fields. A field without a saved value is
-``null``. The ``metadata.visibility`` object contains visibility for the same
-six fields:
-
-.. code-block:: json
-
-     {
-         "ethnicity": "ba",
-         "employment_status": null,
-         "enrolled_in_school": "yes",
-         "enrolled_in_school_type": "four-year",
-         "local_community_living": null,
-         "zipcode": "12345",
-         "metadata": {
-             "visibility": {
-                 "ethnicity": "optional",
-                 "employment_status": "required",
-                 "enrolled_in_school": "optional",
-                 "enrolled_in_school_type": "hidden",
-                 "local_community_living": "optional",
-                 "zipcode": "optional"
-             }
-         }
-     }
-
-PATCH example
-=============
-
-``PATCH`` accepts any subset of the six fields and returns the complete
-response payload shown above. For example:
-
-.. code-block:: console
-
-     $ curl -X PATCH -b cookies.txt \
-             -H 'Content-Type: application/json' \
-             -d '{"employment_status":"student","zipcode":"12345-6789"}' \
-             https://lms.example.com/api/custom-reg-form/v1/me/
-
-The related custom-field record is created automatically when the user does
-not have one. An empty JSON object leaves the values unchanged and returns the
-current response.
-
-Responses and errors
-====================
-
-Successful ``GET`` and ``PATCH`` requests return HTTP 200 and a JSON object
-with the six field values and ``metadata.visibility``. Unauthenticated
-requests return HTTP 401:
-
-.. code-block:: json
-
-     {"detail": "Authentication credentials were not provided."}
-
-Validation errors return HTTP 400 as a field-keyed JSON object. For example,
-an invalid ZIP Code returns:
-
-.. code-block:: json
-
-     {"zipcode": ["Must be a valid zipcode"]}
-
-Invalid JSON or a non-object JSON body returns HTTP 400:
-
-.. code-block:: json
-
-     {"detail": "JSON body must be an object."}
-
-Cross-user access that is not permitted returns HTTP 403:
-
-.. code-block:: json
-
-     {"detail": "You do not have permission to access this account."}
-
-An unknown username returns HTTP 404:
-
-.. code-block:: json
-
-     {"detail": "Account not found."}
-
-Authorization and visibility
-============================
-
-The ``/me/`` routes always resolve to the authenticated user. The username
-routes allow self-access, allow staff to read another user's fields, and deny
-all cross-user updates. Authentication is required for every endpoint.
-
-Visibility is read from Django's ``REGISTRATION_EXTRA_FIELDS`` setting for
-these six custom fields. Each field is reported as ``required``, ``optional``,
-or ``hidden``. If a field is missing from the setting, the API reports
-``optional``. Other registration fields are not included or changed by this
-API.
+An example app that can be used as a template for extending the registration form in the Open edX LMS.
 
 TODO: The ``README.rst`` file should start with a brief description of the repository and its purpose.
 It should be described in the context of other repositories under the ``openedx``
@@ -184,7 +32,10 @@ Please see the Open edX documentation for `guidance on Python development`_ in t
 Deploying
 *********
 
-For details on how to deploy this component, see the `deployment how-to`_.
+TODO: How can a new user go about deploying this component? Is it just a few
+commands? Is there a larger how-to that should be linked here?
+
+PLACEHOLDER: For details on how to deploy this component, see the `deployment how-to`_.
 
 .. _deployment how-to: https://docs.openedx.org/projects/custom-form-app/how-tos/how-to-deploy-this-component.html
 
@@ -194,9 +45,11 @@ Getting Help
 Documentation
 =============
 
-Start with `the documentation`_. If you need more help, see below.
+PLACEHOLDER: Start by going through `the documentation`_.  If you need more help see below.
 
 .. _the documentation: https://docs.openedx.org/projects/custom-form-app
+
+(TODO: `Set up documentation <https://openedx.atlassian.net/wiki/spaces/DOC/pages/21627535/Publish+Documentation+on+Read+the+Docs>`_)
 
 More Help
 =========
