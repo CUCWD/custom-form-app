@@ -141,6 +141,12 @@ setup(
         exclude=["*tests"],
     ),
 
+    entry_points={
+        "lms.djangoapp": [
+            "custom_reg_form = custom_reg_form.apps:CustomRegFormConfig",
+        ],
+    },
+
     include_package_data=True,
     install_requires=load_requirements('requirements/base.in'),
     python_requires=">=3.11.8",
