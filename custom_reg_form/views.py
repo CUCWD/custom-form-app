@@ -37,12 +37,26 @@ def _field_visibility():
     }
 
 
+def _field_options():
+    """Return select choices in the format expected by the Account MFE."""
+    return {
+        field_name: [
+            {'value': value, 'label': str(label)}
+            for value, label in ExtraInfo._meta.get_field(field_name).choices or ()
+        ]
+        for field_name in CUSTOM_FIELDS
+    }
+
+
 def _serialize_extra_info(extra_info):
     """Return the custom-field payload using the six supported fields."""
     payload = {}
     for field_name in CUSTOM_FIELDS:
         payload[field_name] = getattr(extra_info, field_name, None)
-    payload['metadata'] = {'visibility': _field_visibility()}
+    payload['metadata'] = {
+        'visibility': _field_visibility(),
+        'options': _field_options(),
+    }
     return payload
 
 
@@ -90,7 +104,12 @@ def _custom_fields_response(request, user):
     if not patch_data:
         return JsonResponse(_serialize_extra_info(extra_info))
 
-    form = ExtraInfoForm(instance=extra_info, data=patch_data)
+    form_data = {
+        field_name: getattr(extra_info, field_name)
+        for field_name in CUSTOM_FIELDS
+    }
+    form_data.update(patch_data)
+    form = ExtraInfoForm(instance=extra_info, data=form_data)
     if not form.is_valid():
         return JsonResponse(form.errors, safe=False, status=400)
 

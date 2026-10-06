@@ -16,7 +16,7 @@ Unreleased
 
 *
 
-1.2.0 – 2026-09-09
+1.2.0 – 2026-10-06
 *******************
 
 Added
@@ -25,6 +25,7 @@ Added
 * Added authenticated custom account-field ``GET`` and ``PATCH`` endpoints.
 * Added username-based account access for self-service and staff reads.
 * Added required, optional, or hidden registration-field visibility metadata.
+* Added automatic LMS plugin registration for custom registration form endpoints.
 
 1.0.0 – 2025-11-13
 **********************************************
