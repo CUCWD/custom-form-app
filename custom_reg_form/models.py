@@ -82,7 +82,7 @@ class ExtraInfo(models.Model):
         blank=True,
         validators=[RegexValidator(
             regex=r'^(\d{5}([\-]\d{4})?)$',
-            message=u'Must be a valid zipcode'
+            message=u'Enter a valid U.S. ZIP code in 5-digit or ZIP+4 format (e.g., 12345 or 12345-6789).'
         )]
     )
 
@@ -150,5 +150,4 @@ class ExtraInfo(models.Model):
         """ Convenience method that returns the human readable gender. """
         if self.local_community_living:
             return self.__enumerable_to_display(self.LOCAL_COMMUNITY_LIVING_CHOICES, self.local_community_living)
-
 

@@ -53,6 +53,25 @@ class SelfServiceApiTests(TestCase):
         self.assertTrue(ExtraInfo.objects.filter(user=self.user).exists())
         self.assertEqual(ExtraInfo.objects.get(user=self.user).zipcode, '12345')
 
+    def test_me_patch_preserves_other_custom_field_values(self):
+        self.client.force_login(self.user)
+
+        self.client.patch(
+            '/api/custom-reg-form/v1/me/',
+            data=json.dumps({'zipcode': '12345'}),
+            content_type='application/json',
+        )
+        response = self.client.patch(
+            '/api/custom-reg-form/v1/me/',
+            data=json.dumps({'ethnicity': 'as'}),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['zipcode'], '12345')
+        self.assertEqual(payload['ethnicity'], 'as')
+
     def test_me_patch_returns_field_level_validation_errors(self):
         self.client.force_login(self.user)
 
@@ -94,6 +113,24 @@ class SelfServiceApiTests(TestCase):
 
         visibility = json.loads(response.content)['metadata']['visibility']
         self.assertEqual(set(visibility.values()), {'optional'})
+
+    def test_metadata_exposes_model_choices_as_select_options(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get('/api/custom-reg-form/v1/me/')
+
+        options = json.loads(response.content)['metadata']['options']
+        self.assertEqual(options['ethnicity'][0], {'value': 'w', 'label': 'White'})
+        self.assertEqual(options['employment_status'][0], {
+            'value': 'efw', 'label': 'Employed for wages',
+        })
+        self.assertEqual(options['enrolled_in_school_type'][0], {
+            'value': 'hs', 'label': 'High School',
+        })
+        self.assertEqual(options['local_community_living'][0], {
+            'value': 'ls', 'label': 'A large city',
+        })
+        self.assertEqual(options['zipcode'], [])
 
 
 class UsernameApiAuthorizationTests(TestCase):
