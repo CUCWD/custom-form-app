@@ -1,14 +1,18 @@
-from .models import ExtraInfo
+"""Forms for custom registration and account fields."""
+
 from django.forms import ModelForm
+
+from .models import ExtraInfo
 
 
 class ExtraInfoForm(ModelForm):
     """
     The fields on this form are derived from the ExtraInfo model in models.py.
     """
-    def __init__(self, *args, **kwargs):
-        super(ExtraInfoForm, self).__init__(*args, **kwargs)
 
+    def __init__(self, *args, **kwargs):
+        """Configure choice placeholders and registration field messages."""
+        super().__init__(*args, **kwargs)
 
         # Ethnicity
         # ----------------------------------
@@ -24,8 +28,7 @@ class ExtraInfoForm(ModelForm):
         # This is where the error on the `frontend_app_authn` MFE registration form
         # was causing the page to crash. Previously we had set this to an object.
         # It just wants a string of dict of strings now.
-        self.fields['ethnicity'].error_messages = u"Select your ethnicity"
-
+        self.fields['ethnicity'].error_messages = "Select your ethnicity"
 
         # Employment Status
         # ----------------------------------
@@ -41,11 +44,11 @@ class ExtraInfoForm(ModelForm):
         # This is where the error on the `frontend_app_authn` MFE registration form
         # was causing the page to crash. Previously we had set this to an object.
         # It just wants a string of dict of strings now.
-        self.fields['employment_status'].error_messages = u"Select your employment status"
-        
+        self.fields['employment_status'].error_messages = "Select your employment status"
+
         # ZIP Code
         # ----------------------------------
-        self.fields['zipcode'].error_messages = u"Please tell us your American ZIP Code"
+        self.fields['zipcode'].error_messages = "Please tell us your American ZIP Code"
 
         # Enrolled in School
         # ----------------------------------
@@ -61,8 +64,8 @@ class ExtraInfoForm(ModelForm):
         # This is where the error on the `frontend_app_authn` MFE registration form
         # was causing the page to crash. Previously we had set this to an object.
         # It just wants a string of dict of strings now.
-        self.fields['enrolled_in_school'].error_messages = u"Select your enrolled in school status"
-        
+        self.fields['enrolled_in_school'].error_messages = "Select your enrolled in school status"
+
         # Enrolled in School Type
         # ----------------------------------
 
@@ -77,8 +80,8 @@ class ExtraInfoForm(ModelForm):
         # This is where the error on the `frontend_app_authn` MFE registration form
         # was causing the page to crash. Previously we had set this to an object.
         # It just wants a string of dict of strings now.
-        self.fields['enrolled_in_school_type'].error_messages = u"Select the type of school you are enrolled in"
-        
+        self.fields['enrolled_in_school_type'].error_messages = "Select the type of school you are enrolled in"
+
         # Local Community Living
         # ----------------------------------
 
@@ -93,8 +96,13 @@ class ExtraInfoForm(ModelForm):
         # This is where the error on the `frontend_app_authn` MFE registration form
         # was causing the page to crash. Previously we had set this to an object.
         # It just wants a string of dict of strings now.
-        self.fields['local_community_living'].error_messages = u"Select the place that describes where you live now"
+        self.fields['local_community_living'].error_messages = "Select the place that describes where you live now"
 
-    class Meta(object):
+    class Meta:
+        """Select the custom registration fields exposed by the form."""
+
         model = ExtraInfo
-        fields = ('ethnicity','employment_status','zipcode', 'enrolled_in_school', 'enrolled_in_school_type', 'local_community_living')
+        fields = (
+            'ethnicity', 'employment_status', 'zipcode', 'enrolled_in_school',
+            'enrolled_in_school_type', 'local_community_living',
+        )

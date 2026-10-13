@@ -1,10 +1,14 @@
-"""
-URLs for custom_reg_form.
-"""
-from django.urls import re_path  # pylint: disable=unused-import
-from django.views.generic import TemplateView  # pylint: disable=unused-import
+"""URLs for custom_reg_form."""
+
+from django.urls import re_path
+
+from .views import account, me
 
 urlpatterns = [
-    # TODO: Fill in URL patterns and views here.
-    # re_path(r'', TemplateView.as_view(template_name="custom_reg_form/base.html")),
+    re_path(r'^me/$', me, name='custom_reg_form_me'),
+    re_path(
+        r'^accounts/(?P<username>[-\w.@+]+)/$',
+        account,
+        name='custom_reg_form_account',
+    ),
 ]

@@ -1,0 +1,140 @@
+"""Views for custom account field self-service API."""
+
+import json
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+
+from .forms import ExtraInfoForm
+from .models import ExtraInfo
+
+CUSTOM_FIELDS = (
+    'ethnicity',
+    'employment_status',
+    'enrolled_in_school',
+    'enrolled_in_school_type',
+    'local_community_living',
+    'zipcode',
+)
+FIELD_VISIBILITY_STATES = ('required', 'optional', 'hidden')
+DEFAULT_FIELD_VISIBILITY = 'optional'
+
+
+def _field_visibility():
+    """Return visibility metadata for custom fields, defaulting to optional."""
+    configured_fields = getattr(settings, 'REGISTRATION_EXTRA_FIELDS', {})
+    if not isinstance(configured_fields, dict):
+        configured_fields = {}
+
+    return {
+        field_name: configured_fields.get(field_name)
+        if configured_fields.get(field_name) in FIELD_VISIBILITY_STATES
+        else DEFAULT_FIELD_VISIBILITY
+        for field_name in CUSTOM_FIELDS
+    }
+
+
+def _field_options():
+    """Return select choices in the format expected by the Account MFE."""
+    return {
+        field_name: [
+            {'value': value, 'label': str(label)}
+            for value, label in ExtraInfo._meta.get_field(field_name).choices or ()
+        ]
+        for field_name in CUSTOM_FIELDS
+    }
+
+
+def _serialize_extra_info(extra_info):
+    """Return the custom-field payload using the six supported fields."""
+    payload = {}
+    for field_name in CUSTOM_FIELDS:
+        payload[field_name] = getattr(extra_info, field_name, None)
+    payload['metadata'] = {
+        'visibility': _field_visibility(),
+        'options': _field_options(),
+    }
+    return payload
+
+
+def _get_or_create_extra_info(user):
+    """Create the associated ExtraInfo record for the authenticated user."""
+    extra_info, _ = ExtraInfo.objects.get_or_create(user=user)
+    return extra_info
+
+
+def _get_patch_data(request):
+    """Parse a PATCH request body into the supported custom-field mapping."""
+    if not request.body:
+        return {}
+
+    try:
+        payload = json.loads(request.body.decode('utf-8'))
+    except (TypeError, ValueError, UnicodeDecodeError):
+        return None
+
+    if not isinstance(payload, dict):
+        return None
+
+    return {
+        field_name: payload[field_name]
+        for field_name in CUSTOM_FIELDS
+        if field_name in payload
+    }
+
+
+def _custom_fields_response(request, user):
+    """Return or update the requested user's custom registration fields."""
+    is_self = request.user == user
+    if not is_self and (request.method == 'PATCH' or not request.user.is_staff):
+        return JsonResponse({'detail': 'You do not have permission to access this account.'}, status=403)
+
+    extra_info = _get_or_create_extra_info(user)
+
+    if request.method == 'GET':
+        return JsonResponse(_serialize_extra_info(extra_info))
+
+    patch_data = _get_patch_data(request)
+    if patch_data is None:
+        return JsonResponse({'detail': 'JSON body must be an object.'}, status=400)
+
+    if not patch_data:
+        return JsonResponse(_serialize_extra_info(extra_info))
+
+    form_data = {
+        field_name: getattr(extra_info, field_name)
+        for field_name in CUSTOM_FIELDS
+    }
+    form_data.update(patch_data)
+    form = ExtraInfoForm(instance=extra_info, data=form_data)
+    if not form.is_valid():
+        return JsonResponse(form.errors, safe=False, status=400)
+
+    instance = form.save(commit=False)
+    instance.user = user
+    instance.save()
+    return JsonResponse(_serialize_extra_info(instance))
+
+
+@require_http_methods(['GET', 'PATCH'])
+def me(request):
+    """Return or update the authenticated user's custom registration fields."""
+    if not request.user.is_authenticated:
+        return JsonResponse({'detail': 'Authentication credentials were not provided.'}, status=401)
+
+    return _custom_fields_response(request, request.user)
+
+
+@require_http_methods(['GET', 'PATCH'])
+def account(request, username):
+    """Return or update custom fields for a username with access controls."""
+    if not request.user.is_authenticated:
+        return JsonResponse({'detail': 'Authentication credentials were not provided.'}, status=401)
+
+    user = get_user_model().objects.filter(username=username).first()
+    if user is None:
+        return JsonResponse({'detail': 'Account not found.'}, status=404)
+
+    return _custom_fields_response(request, user)
