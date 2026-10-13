@@ -12,8 +12,17 @@ USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 class ExtraInfo(models.Model):
     """
-    This model contains two extra fields that will be saved when a user registers.
+    Store six custom registration and account fields linked to a user.
+
     The form that wraps this model is in the forms.py file.
+
+    The consuming application must retire these fields when retiring a user.
+    Deleting the user also deletes this record through the cascading relation.
+
+    .. pii: User reference, ethnicity, employment status, school enrollment and
+        school type, community type, and ZIP code.
+    .. pii_types: id, location, other
+    .. pii_retirement: consumer_api
     """
     user = models.OneToOneField(USER_MODEL, null=True, on_delete=models.CASCADE)
 
@@ -150,4 +159,3 @@ class ExtraInfo(models.Model):
         """ Convenience method that returns the human readable gender. """
         if self.local_community_living:
             return self.__enumerable_to_display(self.LOCAL_COMMUNITY_LIVING_CHOICES, self.local_community_living)
-
