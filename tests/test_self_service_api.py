@@ -84,7 +84,10 @@ class SelfServiceApiTests(TestCase):
         self.assertEqual(response.status_code, 400)
         payload = json.loads(response.content)
         self.assertIn('zipcode', payload)
-        self.assertIn('Must be a valid zipcode', payload['zipcode'])
+        self.assertIn(
+            'Enter a valid U.S. ZIP code in 5-digit or ZIP+4 format (e.g., 12345 or 12345-6789).',
+            payload['zipcode'],
+        )
 
     @override_settings(REGISTRATION_EXTRA_FIELDS={
         'ethnicity': 'required',
