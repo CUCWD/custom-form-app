@@ -26,18 +26,18 @@ Endpoints
      :widths: 35 65
 
      * - Method and path
-         - Access
+       - Access
      * - ``GET /api/custom-reg-form/v1/me/``
-         - Read the authenticated user's fields.
+       - Read the authenticated user's fields.
      * - ``PATCH /api/custom-reg-form/v1/me/``
-         - Partially update the authenticated user's fields.
+       - Partially update the authenticated user's fields.
      * - ``GET /api/custom-reg-form/v1/accounts/{username}/``
-         - Read the user's fields. A user may read their own fields; staff may
-             read another user's fields.
+       - Read the user's fields. A user may read their own fields; staff may
+         read another user's fields.
      * - ``PATCH /api/custom-reg-form/v1/accounts/{username}/``
-         - Partially update the user's fields. Updates are allowed only when the
-             authenticated user is the target user; cross-user updates are denied,
-             including for staff.
+       - Partially update the user's fields. Updates are allowed only when the
+         authenticated user is the target user; cross-user updates are denied,
+         including for staff.
 
 Supported fields
 ================
@@ -50,24 +50,24 @@ listed API value, not the display label.
      :widths: 35 65
 
      * - Field
-         - Accepted values
+       - Accepted values
      * - ``ethnicity``
-         - ``w``, ``ba``, ``na``, ``as``, ``nhpi``, ``hl``, ``me``, ``bm``,
-             ``o``, or ``prefer-not-to-say``
+       - ``w``, ``ba``, ``na``, ``as``, ``nhpi``, ``hl``, ``me``, ``bm``,
+         ``o``, or ``prefer-not-to-say``
      * - ``employment_status``
-         - ``efw``, ``selfemployed``, ``student``, ``homemaker``, ``oowlfw``,
-             ``oownclfw``, ``military``, ``retired``, ``utw``, or
-             ``prefer-not-to-say``
+       - ``efw``, ``selfemployed``, ``student``, ``homemaker``, ``oowlfw``,
+         ``oownclfw``, ``military``, ``retired``, ``utw``, or
+         ``prefer-not-to-say``
      * - ``enrolled_in_school``
-         - ``no``, ``yes``, or ``prefer-not-to-say``
+       - ``no``, ``yes``, or ``prefer-not-to-say``
      * - ``enrolled_in_school_type``
-         - ``hs``, ``two-year``, ``four-year``, ``grad``, ``ne``, ``instructor``,
-             or ``prefer-not-to-say``
+       - ``hs``, ``two-year``, ``four-year``, ``grad``, ``ne``, ``instructor``,
+         or ``prefer-not-to-say``
      * - ``local_community_living``
-         - ``ls``, ``su``, ``sct``, ``ra``, or ``prefer-not-to-say``
+       - ``ls``, ``su``, ``sct``, ``ra``, or ``prefer-not-to-say``
      * - ``zipcode``
-         - A five-digit ZIP Code or ZIP+4 value, for example ``12345`` or
-             ``12345-6789``
+       - A five-digit ZIP Code or ZIP+4 value, for example ``12345`` or
+         ``12345-6789``
 
 GET example
 ===========
