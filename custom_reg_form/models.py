@@ -3,11 +3,11 @@ Database models for custom_reg_form.
 """
 
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_noop
-from django.core.validators import RegexValidator
-# Backwards compatible settings.AUTH_USER_MODEL
-USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
+USER_MODEL = settings.AUTH_USER_MODEL
 
 
 class ExtraInfo(models.Model):
@@ -24,10 +24,11 @@ class ExtraInfo(models.Model):
     .. pii_types: id, location, other
     .. pii_retirement: consumer_api
     """
+
     user = models.OneToOneField(USER_MODEL, null=True, on_delete=models.CASCADE)
 
     def __enumerable_to_display(self, enumerables, enum_value):
-        """ Get the human readable value from an enumerable list of key-value pairs. """
+        """Get the human readable value from an enumerable list of key-value pairs."""
         return dict(enumerables)[enum_value]
 
     # [08/12/2022] removed these, but leaving comment since there'll still be
@@ -54,9 +55,10 @@ class ExtraInfo(models.Model):
 
     @property
     def ethnicity_display(self):
-        """ Convenience method that returns the human readable ethnicity. """
+        """Convenience method that returns the human readable ethnicity."""
         if self.ethnicity:
             return self.__enumerable_to_display(self.ETHNIC_GROUPS, self.ethnicity)
+        return None
 
     EMPLOYMENT_STATUS_CHOICES = (
         ('efw', gettext_noop('Employed for wages')),
@@ -80,9 +82,10 @@ class ExtraInfo(models.Model):
 
     @property
     def employment_status_display(self):
-        """ Convenience method that returns the human readable gender. """
+        """Convenience method that returns the human readable gender."""
         if self.employment_status:
             return self.__enumerable_to_display(self.EMPLOYMENT_STATUS_CHOICES, self.employment_status)
+        return None
 
     zipcode = models.CharField(
         verbose_name="Zip Code",
@@ -91,7 +94,7 @@ class ExtraInfo(models.Model):
         blank=True,
         validators=[RegexValidator(
             regex=r'^(\d{5}([\-]\d{4})?)$',
-            message=u'Enter a valid U.S. ZIP code in 5-digit or ZIP+4 format (e.g., 12345 or 12345-6789).'
+            message='Enter a valid U.S. ZIP code in 5-digit or ZIP+4 format (e.g., 12345 or 12345-6789).'
         )]
     )
 
@@ -111,9 +114,10 @@ class ExtraInfo(models.Model):
 
     @property
     def enrolled_in_school_display(self):
-        """ Convenience method that returns the human readable gender. """
+        """Convenience method that returns the human readable gender."""
         if self.enrolled_in_school:
             return self.__enumerable_to_display(self.ENROLLED_IN_SCHOOL_CHOICES, self.enrolled_in_school)
+        return None
 
     ENROLLED_IN_SCHOOL_TYPE_CHOICES = (
         ('hs', gettext_noop('High School')),
@@ -135,19 +139,22 @@ class ExtraInfo(models.Model):
 
     @property
     def enrolled_in_school_type_display(self):
-        """ Convenience method that returns the human readable gender. """
+        """Convenience method that returns the human readable gender."""
         if self.enrolled_in_school_type:
             return self.__enumerable_to_display(self.ENROLLED_IN_SCHOOL_TYPE_CHOICES, self.enrolled_in_school_type)
+        return None
 
     LOCAL_COMMUNITY_LIVING_CHOICES = (
-        ('ls',gettext_noop('A large city')),
-        ('su',gettext_noop('A suburb near a large city')),
-        ('sct',gettext_noop('A small city or town')),
-        ('ra',gettext_noop('A rural area')),
+        ('ls', gettext_noop('A large city')),
+        ('su', gettext_noop('A suburb near a large city')),
+        ('sct', gettext_noop('A small city or town')),
+        ('ra', gettext_noop('A rural area')),
         ('prefer-not-to-say', gettext_noop('Prefer not to say'))
     )
     local_community_living = models.CharField(
-        verbose_name="Thinking about your local community, which of the following best describes the place you live now?",
+        verbose_name=(
+            "Thinking about your local community, which of the following best describes the place you live now?"
+        ),
         max_length=25,
         null=True,
         blank=True,
@@ -156,6 +163,7 @@ class ExtraInfo(models.Model):
 
     @property
     def local_community_living_display(self):
-        """ Convenience method that returns the human readable gender. """
+        """Convenience method that returns the human readable gender."""
         if self.local_community_living:
             return self.__enumerable_to_display(self.LOCAL_COMMUNITY_LIVING_CHOICES, self.local_community_living)
+        return None

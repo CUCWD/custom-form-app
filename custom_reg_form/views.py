@@ -2,14 +2,13 @@
 
 import json
 
-from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 
 from .forms import ExtraInfoForm
 from .models import ExtraInfo
-
 
 CUSTOM_FIELDS = (
     'ethnicity',

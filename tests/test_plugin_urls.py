@@ -1,10 +1,11 @@
-import custom_reg_form
+"""Tests for LMS plugin URL registration."""
+
 from django.test import SimpleTestCase
 from django.urls import include, re_path, resolve
 
+import custom_reg_form
 from custom_reg_form.apps import CustomRegFormConfig
 from custom_reg_form.views import account, me
-
 
 mounted_urlpatterns = (
     re_path(

@@ -131,7 +131,9 @@ CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'), encod
 setup(
     name='custom-form-app',
     version=VERSION,
-    description="""An example app that can be used as a template for extending the registration form in the Open edX LMS.""",
+    description=(
+        "An example app that can be used as a template for extending the registration form in the Open edX LMS."
+    ),
     long_description=README + '\n\n' + CHANGELOG,
     author='Zachary Trabookis',
     author_email='ztraboo@clemson.edu',

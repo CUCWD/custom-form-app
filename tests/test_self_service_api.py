@@ -1,3 +1,5 @@
+"""Tests for the custom account fields API."""
+
 import json
 
 from django.contrib.auth import get_user_model
