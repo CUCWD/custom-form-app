@@ -77,10 +77,12 @@ def load_requirements(*requirements_paths):
             # It's fine to add constraints to an unconstrained package,
             # but raise an error if there are already constraints in place.
             if existing_version_constraints and existing_version_constraints != version_constraints:
-                raise BaseException(f'Multiple constraint definitions found for {package}:'
-                                    f' "{existing_version_constraints}" and "{version_constraints}".'
-                                    f'Combine constraints into one location with {package}'
-                                    f'{existing_version_constraints},{version_constraints}.')
+                raise BaseException(
+                    'Multiple constraint definitions found for {package}: "{existing}" and "{new}". '
+                    'Combine constraints into one location with {package}{existing},{new}.'.format(
+                        package=package, existing=existing_version_constraints, new=version_constraints,
+                    )
+                )
             if add_if_not_present or package in current_requirements:
                 current_requirements[package] = version_constraints
 
@@ -126,7 +128,10 @@ if sys.argv[-1] == 'tag':
     sys.exit()
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding="utf8").read()
-CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'), encoding="utf8").read()
+CHANGELOG = open(
+    os.path.join(os.path.dirname(__file__), 'CHANGELOG.rst'),
+    encoding="utf8",
+).read()
 
 setup(
     name='custom-form-app',
@@ -135,6 +140,7 @@ setup(
         "An example app that can be used as a template for extending the registration form in the Open edX LMS."
     ),
     long_description=README + '\n\n' + CHANGELOG,
+    long_description_content_type='text/x-rst',
     author='Zachary Trabookis',
     author_email='ztraboo@clemson.edu',
     url='https://github.com/CUCWD/custom-form-app',

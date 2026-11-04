@@ -290,3 +290,18 @@ Please do not report security issues in public. Please email security@openedx.or
 .. .. |status-badge| image:: https://img.shields.io/badge/Status-Maintained-brightgreen
 .. .. |status-badge| image:: https://img.shields.io/badge/Status-Deprecated-orange
 .. .. |status-badge| image:: https://img.shields.io/badge/Status-Unsupported-red
+
+
+Ulmo dependency management
+**************************
+
+Install this plugin into a provisioned Ulmo platform environment. Runtime
+requirements in ``requirements/base.in`` and ``base.txt`` remain unpinned so
+edx-platform controls the Django version.
+
+Use ``requirements/dev.txt`` only in a separate development environment.
+``requirements/constraints.txt`` references ``ulmo-constraints.txt``, a local
+snapshot of platform bounds and relevant resolved pins. Refresh the snapshot
+when changing the target platform, then run ``make upgrade`` to regenerate
+tooling locks. Keep ``base.txt`` unpinned. Run ``tox -e django52`` to test against
+Ulmo's Django 5.2.11.
