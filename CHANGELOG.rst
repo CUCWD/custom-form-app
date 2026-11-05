@@ -14,9 +14,19 @@ Change Log
 Unreleased
 **********
 
-*
+1.2.2 - 2026-11-04
+******************
 
-1.2.0 – 2026-10-06
+Changed
+========
+
+* Defer runtime Django versions to the host Ulmo platform and move Atlas
+  translation tooling to development requirements.
+* Snapshot Ulmo constraints and regenerate standalone tooling locks to match
+  platform versions without including pins in runtime package metadata.
+* Target Django 5.2.11 in tox and CI on Python 3.11 and 3.12.
+
+1.2.0 - 2026-10-06
 *******************
 
 Added
@@ -27,7 +37,7 @@ Added
 * Added required, optional, or hidden registration-field visibility metadata.
 * Added automatic LMS plugin registration for custom registration form endpoints.
 
-1.0.0 – 2025-11-13
+1.0.0 - 2025-11-13
 **********************************************
 
 Added
